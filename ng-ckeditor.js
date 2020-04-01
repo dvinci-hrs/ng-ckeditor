@@ -30,6 +30,30 @@
 
         CKEDITOR.on('loaded', checkLoaded);
         $timeout(checkLoaded, 100);
+
+        // add new url to provider youtube for ckeditor-oembed-plugin
+        // see:
+        // https://github.com/starfishmod/jquery-oembed-all/blob/master/jquery.oembed.js#L468
+        // https://github.com/starfishmod/jquery-oembed-all/blob/master/jquery.oembed.js#L496
+        //
+        // Tested with:
+        // https://www.youtube.com/watch?v=PTo-DsPIlDk
+        // https://www.youtube-nocookie.com/embed/nShlloNgM2E
+        CKEDITOR.on("instanceReady", function () {
+            updateOEmbedProvider()
+        });
+
+        function updateOEmbedProvider() {
+            var youtubeUrls = [];
+            if (jQuery.fn.oembed.providers.length) {
+                var youtubeArr = jQuery.grep(jQuery.fn.oembed.providers, function (a) {
+                    return a.name === "youtube";
+                });
+                youtubeUrls = youtubeArr[0].urlschemes;
+                youtubeUrls.push("youtube-nocookie.com/embed");
+            }
+            jQuery.fn.updateOEmbedProvider('youtube', null, youtubeUrls, null, null);
+        }
     }]);
 
     app.directive('ckeditor', ['$timeout', '$q', function ($timeout, $q) {
