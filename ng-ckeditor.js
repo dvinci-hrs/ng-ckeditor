@@ -19,6 +19,7 @@
             throw new Error('CKEDITOR not found');
         }
         CKEDITOR.disableAutoInline = true;
+
         function checkLoaded() {
             if (CKEDITOR.status === 'loaded') {
                 loaded = true;
@@ -97,14 +98,16 @@
                         });
                     }, updateOEmbedProvider = function () {
                         var youtubeUrls = [];
-                        if (jQuery.fn.oembed.providers.length) {
-                            var youtubeArr = jQuery.grep(jQuery.fn.oembed.providers, function (a) {
-                                return a.name === "youtube";
-                            });
-                            youtubeUrls = youtubeArr[0].urlschemes;
-                            youtubeUrls.push("youtube-nocookie.com/embed");
+                        if (jQuery.fn.oembed) {
+                            if (jQuery.fn.oembed.providers.length) {
+                                var youtubeArr = jQuery.grep(jQuery.fn.oembed.providers, function (a) {
+                                    return a.name === "youtube";
+                                });
+                                youtubeUrls = youtubeArr[0].urlschemes;
+                                youtubeUrls.push("youtube-nocookie.com/embed");
+                            }
+                            jQuery.fn.updateOEmbedProvider('youtube', null, youtubeUrls, null, null);
                         }
-                        jQuery.fn.updateOEmbedProvider('youtube', null, youtubeUrls, null, null);
                     };
 
                     instance.on('pasteState', setModelData);
